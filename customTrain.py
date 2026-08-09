@@ -1,11 +1,7 @@
 from ultralytics import YOLO
 
 def customTrain():
-    # Sixth Run Parameters
-    # model = yolov8n-cls (nano version)
-    # imgz = 384 (increase the resolution to handle thinner cracks)
-    # cache=True (helps speed up CPU training by caching images into ram
-    # Additional spatial & rotation augmentations
+
 
     model = YOLO("yolov8n-cls.pt")
 
