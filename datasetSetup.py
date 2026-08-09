@@ -9,8 +9,6 @@ YOLO_DIR = "./sdnet_yolo_cls"
 TRAIN_RATIO = 0.8
 VAL_RATIO = 0.1
 
-# test
-
 CLASS_SIZE = 3000
 
 def preparation():
