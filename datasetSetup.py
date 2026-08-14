@@ -1,17 +1,37 @@
 import os
 import shutil
 import random
+from tqdm import tqdm
+import cv2
 
 RAW_DIR = "Dataset"
+CLAHE_DIR = "./dataset_clahe"
 YOLO_DIR = "./sdnet_yolo_cls"
 
 # Ratios
 TRAIN_RATIO = 0.8
 VAL_RATIO = 0.1
 
-CLASS_SIZE = 3000
+CLASS_SIZE = 5000
 
-def preparation():
+# CLAHE Initialization
+clahe = cv2.createCLAHE(clipLimit=40, tileGridSize=(8,8))
+
+def applyCLAHE(src, dest):
+
+    img = cv2.imread(src, cv2.IMREAD_COLOR)
+    if img is None:
+        return
+
+    lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+    l, a, b = cv2.split(lab)
+    enhancedL = clahe.apply(l)
+    enhancedLab = cv2.merge([enhancedL, a, b])
+    enhancedImage = cv2.cvtColor(enhancedLab, cv2.COLOR_LAB2BGR)
+
+    cv2.imwrite(dest, enhancedImage)
+
+def preparation(srcPath):
     cracked_images = []
     noncracked_images = []
 
@@ -47,8 +67,8 @@ def preparation():
     cracked_sampled = random.sample(cracked_images, CLASS_SIZE)
     noncracked_sampled = random.sample(noncracked_images, CLASS_SIZE)
 
-    if os.path.exists(YOLO_DIR):
-        shutil.rmtree(YOLO_DIR)
+    if os.path.exists(srcPath):
+        shutil.rmtree(srcPath)
 
     for class_name, img_list in [('cracked', cracked_sampled), ('noncracked', noncracked_sampled)]:
         random.shuffle(img_list)
@@ -61,20 +81,29 @@ def preparation():
         test_files = img_list[val_end:]
 
         for split, files in [('train', train_files), ('val', val_files), ('test', test_files)]:
-            dest_dir = os.path.join(YOLO_DIR, split, class_name)
+            dest_dir = os.path.join(srcPath, split, class_name)
             os.makedirs(dest_dir, exist_ok=True)
-            for src_path in files:
-                shutil.copy(src_path, os.path.join(dest_dir, os.path.basename(src_path)))
+
+            # NON-CLAHE
+            if srcPath == YOLO_DIR:
+                for src_path in tqdm(files, desc=f"Processing {class_name} ({split})"):
+                    shutil.copy(src_path, os.path.join(dest_dir, os.path.basename(src_path)))
+
+            # CLAHE
+            if srcPath == CLAHE_DIR:
+                for src_path in tqdm(files, desc=f"Processing {class_name} ({split})"):
+                    dest_path = os.path.join(dest_dir, os.path.basename(src_path))
+                    applyCLAHE(src_path, dest_path)
 
     train_count = int(CLASS_SIZE * TRAIN_RATIO)
     val_count = int(CLASS_SIZE * VAL_RATIO)
     test_count = CLASS_SIZE - (train_count + val_count)
 
-    print(f"Dataset successfully structured in '{YOLO_DIR}'")
+    print(f"Dataset successfully structured in '{srcPath}'")
     print(f"Train split: {train_count} images per class")
     print(f"Val split: {val_count} images per class")
     print(f"Test split: {test_count}")
 
 if __name__ == '__main__':
-    preparation()
+    preparation(CLAHE_DIR)
 

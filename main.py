@@ -35,34 +35,35 @@ class CrackApp:
 
         # Control Section
         ttk.Label(sidebar, text="Controls", font=("Helvetica", 14, "bold")).pack(anchor="w", pady=(0, 10))
-        
+
         self.btn_browse = ttk.Button(sidebar, text="Select Image", command=self.load_image)
         self.btn_browse.pack(fill=tk.X, pady=4)
 
         self.btn_analyze = ttk.Button(sidebar, text="Run Analysis", command=self.run_analysis, state=tk.DISABLED)
         self.btn_analyze.pack(fill=tk.X, pady=4)
 
-        self.btn_save = ttk.Button(sidebar, text="Save Overlay Image", command=self.save_visualization, state=tk.DISABLED)
+        self.btn_save = ttk.Button(sidebar, text="Save Overlay Image", command=self.save_visualization,
+                                   state=tk.DISABLED)
         self.btn_save.pack(fill=tk.X, pady=4)
 
         ttk.Separator(sidebar, orient="horizontal").pack(fill=tk.X, pady=12)
 
         # ------------------ Classification Assessment Section ------------------ #
         ttk.Label(sidebar, text="Assessment", font=("Helvetica", 14, "bold")).pack(anchor="w", pady=(0, 8))
-        
+
         # Color-Coded Status Badge
         ttk.Label(sidebar, text="Status:", font=("Helvetica", 9, "bold")).pack(anchor="w", pady=(0, 2))
-        
+
         badge_frame = ttk.Frame(sidebar, width=220, height=28)
         badge_frame.pack_propagate(False)
         badge_frame.pack(anchor="w", padx=6, pady=(0, 8))
 
         self.lbl_badge = tk.Label(
-            badge_frame, 
-            text="---", 
-            font=("Helvetica", 10, "bold"), 
-            bg="#7f8c8d", 
-            fg="white", 
+            badge_frame,
+            text="---",
+            font=("Helvetica", 10, "bold"),
+            bg="#7f8c8d",
+            fg="white",
             relief="flat"
         )
         self.lbl_badge.pack(fill=tk.BOTH, expand=True)
@@ -116,7 +117,7 @@ class CrackApp:
 
         # ------------------ Analysis Overlay Legend (Inside Right Container) ------------------ #
         self.legend_frame = ttk.Frame(frame_proc)
-        
+
         ttk.Label(self.legend_frame, text="Legend:", font=("Helvetica", 9, "bold")).pack(side=tk.LEFT, padx=(0, 8))
 
         # Blue Swatch
@@ -138,7 +139,7 @@ class CrackApp:
 
         w, h = 232, 60
         x1, y1 = 6, 18
-        x2, y2 = 226, 36 
+        x2, y2 = 226, 36
         bar_width = x2 - x1
 
         colors = ["#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#1e8449"]
@@ -166,12 +167,13 @@ class CrackApp:
             # Black Upward-Pointing Triangle
             self.canvas_gauge.create_polygon(
                 px, y2 + 2,
-                px - 6, y2 + 11,
-                px + 6, y2 + 11,
+                    px - 6, y2 + 11,
+                    px + 6, y2 + 11,
                 fill="#2c3e50", outline=""
             )
             # Numeric Score Below Pointer
-            self.canvas_gauge.create_text(px, y2 + 18, text=f"{clamped_score:.1f}%", font=("Helvetica", 8, "bold"), fill="#2c3e50")
+            self.canvas_gauge.create_text(px, y2 + 18, text=f"{clamped_score:.1f}%", font=("Helvetica", 8, "bold"),
+                                          fill="#2c3e50")
         else:
             self.canvas_gauge.create_text(w / 2, y2 + 15, text="--%", font=("Helvetica", 8, "bold"), fill="#7f8c8d")
 
@@ -217,10 +219,10 @@ class CrackApp:
         if class_label == "NONCRACKED":
             # Green Badge for Non-Cracked
             self.lbl_badge.config(text="NO CRACK DETECTED", bg="#27ae60")
-            
+
             self._reset_measurement_labels()
             self.output_visualization = None
-            
+
             # Reset right canvas frame & hide legend
             self.lbl_img_proc.config(image="", text="No crack detected within image.")
             self.legend_frame.pack_forget()
@@ -232,7 +234,7 @@ class CrackApp:
 
             # Run segmentation & measurement
             measurements = self.analyzer.analyzeCrackPixels(
-                self.current_image_path, 
+                self.current_image_path,
                 threshold_method='otsu'
             )
 

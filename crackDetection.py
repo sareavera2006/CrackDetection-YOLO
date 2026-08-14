@@ -7,7 +7,7 @@ class CrackAssessment:
         reloading weights every time an image is evaluated.
         """
 
-        model_path = "runs/classify/sdnet_crack_detection/yolov8_first_run/weights/best.pt"
+        model_path = "runs/classify/sdnet_crack_detection/yolov8_kg50_2ndrun(CLAHE)/weights/best.pt"
 
         self.model = YOLO(model_path)
         self.class_names = self.model.names
