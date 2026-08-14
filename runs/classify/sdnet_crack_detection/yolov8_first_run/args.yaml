@@ -2,7 +2,7 @@ task: classify
 mode: train
 model: yolov8n-cls.pt
 data: ./sdnet_yolo_cls
-epochs: 25
+epochs: 30
 time: null
 patience: 100
 batch: 16
@@ -113,4 +113,4 @@ auto_augment: randaugment
 erasing: 0.4
 cfg: null
 tracker: tracktrack.yaml
-save_dir: C:\Users\cmayv\PyCharmProjects\Project\runs\classify\sdnet_crack_detection\yolov8_first_run
+save_dir: C:\Users\cmayv\PyCharmProjects\Project\runs\classify\sdnet_crack_detection\yolov8_d2k_run
