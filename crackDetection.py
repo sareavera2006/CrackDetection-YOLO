@@ -1,25 +1,41 @@
 from ultralytics import YOLO
-import cv2
 
-model = YOLO("runs/classify/sdnet_crack_detection/yolov8_first_run/weights/best.pt")
+class CrackAssessment:
+    def __init__(self):
+        """
+        Responsible for initializing the model once to avoid
+        reloading weights every time an image is evaluated.
+        """
 
-test_image = "test_crack.jpg"
+        model_path = "runs/classify/sdnet_crack_detection/yolov8_first_run/weights/best.pt"
 
-results = model(test_image)
+        self.model = YOLO(model_path)
+        self.class_names = self.model.names
 
-for result in results:
-    # Get highest confidence class index and confidence score
-    top1_id = result.probs.top1  # Class index (0 or 1)
-    top1_conf = result.probs.top1conf.item()  # Confidence (e.g. 0.982)
-    class_name = result.names[top1_id]  # Class label ('cracked' or 'noncracked')
+    def assessImage(self, image):
+        """
+        Assesses the crack image and returns the crack assessment and confidence percent.
 
-    print(f"File: {result.path}")
-    print(f"Prediction: {class_name.upper()} ({top1_conf * 100:.2f}% confidence)\n")
+        :param image: Image Path
+        :return dict: Crack Assessment and other metrics (confidence percent, etc)
+        """
 
-    annotated_frame = result.plot()
+        results = self.model(image, verbose=False) # Verbose prevents Ultralytics console logs
+        result = results[0]
 
-    annotated_frame = cv2.resize(annotated_frame, (640,640))
+        top1_id = int(result.probs.top1)
+        top1_conf = float(result.probs.top1conf.item())
+        class_name = self.class_names[top1_id]
 
-    cv2.imshow("YOLOv8 Concrete Crack Classification", annotated_frame)
-    cv2.waitKey(0)  # Press any key to close
-    cv2.destroyAllWindows()
+        return{
+            "assessment": class_name.upper(),
+            "class_id": top1_id,
+            "confidence": top1_conf,
+            "confidence_percent": round(top1_conf * 100, 2),
+            "raw_probabilities": {
+                self.class_names[i]: f"{prob * 100:.2f}%"
+                for i, prob in enumerate(result.probs.data.tolist())
+            }
+        }
+
+
