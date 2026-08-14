@@ -26,16 +26,17 @@ class CrackAssessment:
         top1_id = int(result.probs.top1)
         top1_conf = float(result.probs.top1conf.item())
         class_name = self.class_names[top1_id]
+        raw_probs = {
+            self.class_names[i]: float(prob)
+            for i, prob in enumerate(result.probs.data.tolist())
+        }
 
         return{
             "assessment": class_name.upper(),
             "class_id": top1_id,
             "confidence": top1_conf,
             "confidence_percent": round(top1_conf * 100, 2),
-            "raw_probabilities": {
-                self.class_names[i]: f"{prob * 100:.2f}%"
-                for i, prob in enumerate(result.probs.data.tolist())
-            }
+            "raw_probabilities": raw_probs
         }
 
 
