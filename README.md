@@ -136,7 +136,14 @@ imgsz - this simply refers to the resolution of which the model will use (256x25
 --- 
 #### Crack Detection 
 
-- To be filled.
+Running the crack detection file requires training the model. After training the model, link the path of the model to the model variable. 
+
+Following Example
+```text
+
+model_path = "runs/classify/sdnet_crack_detection/yolov8_kg50_2ndrun(CLAHE)/weights/best.pt"
+
+```
 
 ---
 #### Crack Measurement
@@ -144,7 +151,7 @@ imgsz - this simply refers to the resolution of which the model will use (256x25
 - To be filled.
 
 --- 
-#### Final Report (GUI)
+#### Graphic User Interface
 
 - To be filled.
 
