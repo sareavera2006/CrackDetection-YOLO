@@ -134,7 +134,7 @@ imgsz - this simply refers to the resolution of which the model will use (256x25
 - fliplr: Probability of flipping the image left-to-right (Default: 0.5).
 
 --- 
-#### Crack Detection 
+## Crack Detection 
 
 Running the crack detection file requires training the model. After training the model, link the path of the model to the model variable. 
 
@@ -145,13 +145,24 @@ model_path = "runs/classify/sdnet_crack_detection/yolov8_kg50_2ndrun(CLAHE)/weig
 
 ```
 
----
-#### Crack Measurement
+After the path has been properly cited, attach the path of the desired image to the image_path variable. The model will then provide the assessment and the corresponding confidence value. 
 
-- To be filled.
+---
+## Crack Measurement
+
+The crack measurement module is configured to accept the following: image path, the type of threshold method to be used, and the pixel per millimeter value. The image path hands the path of the image to the module, while the threshold method type that the module will use can be dictated to either apply adaptive gaussian or the otsu method. The threshold type is set to adaptive by default. The pixel per millimeter is also set to 0 by default. This means that the metrics returned for the crack's length and width will be measured in pixels. Currently no configuration is put in place for the proper conversion from pixel to millimeter. 
 
 --- 
-#### Graphic User Interface
+## Graphic User Interface
 
-- To be filled.
+This can be loaded by running the **main.py** python file. 
+<img width="1430" height="882" alt="image" src="https://github.com/user-attachments/assets/415be672-e0fe-4614-9e3b-5d39e295b7a5" />
+
+In order to initiate the crack detection and measurement of the program, the user is prompted to select an image from their files.
+<img width="1432" height="882" alt="image" src="https://github.com/user-attachments/assets/ccbc766a-8137-49b6-ab2b-b25ca33e548c" />
+
+Click 'Run Analysis' to generate the crack assessment along with the confidence level. The assessment dictates whether a crack is present within an image and its confidence level. Additionally, this would also generate the measurement of the crack's length and width based on pixels. 
+<img width="1600" height="882" alt="image" src="https://github.com/user-attachments/assets/414d8753-b0a9-4e29-8d9e-0d0f1fc9c976" />
+
+
 
